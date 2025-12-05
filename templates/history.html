@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title data-i18n="navHistory">History</title>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Bootstrap CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           GLOBAL THEME (Same as home.html)
+        ========================================== */
+        :root {
+            --college-primary-color: #8B404E;
+            --button-color: #CD607D;
+            --nude-bg: #F9F4F4;
+            --light-card: #FFFFFF;
+            --border-soft: #E9D3D9;
+            --light-accent: #F5E2E6;
+            --shadow-soft: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ==== BODY: same background & overlay as home.html ==== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+            background-image: url("{{ url_for('static', filename='Background_image.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* soft pink overlay for readability */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(240, 220, 220, 0.55);
+            z-index: -1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==========================================
+           HEADER (same style as home.html)
+        ========================================== */
+        header {
+            background-color: var(--college-primary-color);
+            color: white;
+            padding: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+            position: relative;
+            z-index: 50;
+        }
+       .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;   /* needed for absolute child */
+}
+
+#profile-widget {
+    position: absolute;
+    right: 22px;
+}
+
+        .header-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+       
+
+
+        /* Profile widget */
+    
+        #profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+        #profile-header:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        #admin-badge {
+            background: var(--light-accent);
+            color: var(--button-color);
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        #details-content {
+            position: absolute;
+            right: 0;
+            top: 54px;
+            width: 220px;
+            background: white;
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            display: none;
+        }
+        .lang-button.active {
+            background: var(--button-color) !important;
+            color: white !important;
+        }
+
+        /* Avatar */
+        .profile-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #F0DCDC;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8B404E;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        }
+
+        /* ==========================================
+           NAVBAR
+        ========================================== */
+        .navbar {
+            background-color: var(--button-color);
+            padding: 12px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            padding: 0;
+            margin: 0;
+            margin: 0 auto;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: 0.3s;
+            
+        }
+        .nav-links a:hover {
+            background: var(--college-primary-color);
+        }
+
+        /* ==========================================
+           MAIN CONTAINER
+        ========================================== */
+        .container {
+            max-width: 1050px;
+            margin: 26px auto;
+            padding: 18px;
+            flex: 1;
+            width: 100%;
+        }
+        .card {
+            background: var(--light-card);
+            padding: 26px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 18px;
+            margin-top: 16px;
+        }
+
+        /* === Back Button === */
+        .back-btn {
+            display: inline-block;
+            background-color: var(--button-color);
+            color: white;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+        .back-btn:hover {
+            background-color: var(--college-primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Upload card */
+        .upload-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .upload-meta {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .upload-disease {
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .upload-file {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .upload-image {
+            margin-top: 8px;
+            border-radius: 8px;
+            max-width: 100%;
+            max-height: 140px;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+
+        /* Modal */
+        #user-details-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 900px;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+        }
+
+        /* ==========================================
+           CHATBOT
+        ========================================== */
+        #chatbot-btn {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 64px;
+            height: 64px;
+            font-size: 26px;
+            background: var(--button-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            cursor: pointer;
+            z-index: 90;
+        }
+
+        .chatbot-box {
+            position: fixed;
+            bottom: 100px;
+            right: 28px;
+            width: 320px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 99;
+        }
+        .chatbot-header {
+            background: var(--button-color);
+            color: white;
+            padding: 12px 14px;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chatbot-body {
+            padding: 10px;
+            height: 260px;
+            overflow-y: auto;
+        }
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        .chatbot-input input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            outline: none;
+        }
+        .chatbot-input button {
+            background: var(--button-color);
+            border: none;
+            padding: 8px 12px;
+            color: white;
+        }
+
+        .bot-msg, .user-msg {
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            max-width: 80%;
+        }
+        .bot-msg { background: #f2f2f2; }
+        .user-msg {
+            background: #e0e0e0;
+            align-self: flex-end;
+        }
+
+        /* ==========================================
+           FOOTER
+        ========================================== */
+        footer {
+            background: var(--button-color);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: auto;
+        }
+
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="header-content">
+        <div class="header-title" data-i18n="headerTitle">Pomegranate Disease Detection System</div>
+
+        <div id="profile-widget">
+            <div id="profile-header">
+                <div class="profile-circle">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <p id="greeting" style="margin:0;font-weight:700">Hello, User</p>
+                    <span id="admin-badge" class="hidden">Admin</span>
+                </div>
+            </div>
+
+            <div id="details-content">
+                <label style="font-size:12px;color:#666">Phone</label>
+                <div id="phone-number" style="font-weight:700;margin-bottom:10px">-</div>
+
+                <label style="font-size:12px;color:#666">Language</label>
+                <div style="margin-top:6px;display:flex;gap:6px;">
+                    <button data-lang="en" class="lang-button"
+                            style="padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:white">English</button>
+                    <button data-lang="kn" class="lang-button"
+                            style="padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:white">ಕನ್ನಡ</button>
+                </div>
+
+                <button id="logout-button"
+                        style="margin-top:12px;width:100%;padding:8px;border-radius:8px;background:#F5E2E6;border:1px solid #F0DCDC;color:#8B404E">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="{{ url_for('login_page') }}">Login</a></li>
+        <li><a href="{{ url_for('home_page') }}">Home</a></li>
+        <li><a href="{{ url_for('upload_page') }}">Disease Detector</a></li>
+        <li><a href="{{ url_for('disease_page') }}">Disease Info</a></li>
+        <li><a href="{{ url_for('history_page') }}">History</a></li>
+        <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <!-- Back button to Home -->
+        <a href="{{ url_for('home_page') }}" class="back-btn">⬅ Back</a>
+
+        <h2 data-i18n="navHistory">History</h2>
+        <p id="role-display" style="margin-top:-10px;color:#666"></p>
+
+        <!-- Admin View -->
+        <div id="admin-history-view" style="display:none;">
+            <h3 data-i18n="allUsers">All Users</h3>
+
+            <table style="width:100%;border-collapse:collapse;margin-top:12px">
+                <thead>
+                    <tr style="background:#F6E7EA">
+                        <th style="padding:12px" data-i18n="username">Username</th>
+                        <th style="padding:12px" data-i18n="phone">Phone</th>
+                        <th style="padding:12px" data-i18n="action">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- User View -->
+        <div id="user-history-view" style="display:none;">
+            <h3 data-i18n="yourUploads">Your Uploads</h3>
+            <div id="user-uploads-container" class="grid"></div>
+        </div>
+    </div>
+</div>
+
+<div id="user-details-modal">
+    <div class="modal-box">
+        <button onclick="closeModal()"
+                style="position:absolute;right:14px;top:12px;background:#eee;border:none;padding:6px 10px;border-radius:6px">
+            Close
+        </button>
+        <h3 id="details-username"></h3>
+        <div id="details-uploads-container" class="grid" style="margin-top:14px"></div>
+    </div>
+</div>
+
+<button id="chatbot-btn">💬</button>
+
+<div id="chatbot-box" class="chatbot-box">
+    <div class="chatbot-header">
+        <span>Agro Chatbot</span>
+        <span id="close-chat" style="cursor:pointer">✖</span>
+    </div>
+
+    <div class="chatbot-body" id="chat-body">
+        <div class="bot-msg">Hi! How can I help you today?</div>
+    </div>
+
+    <div class="chatbot-input">
+        <input type="text" id="chat-input" placeholder="Type here...">
+        <button id="send-chat">Send</button>
+    </div>
+</div>
+
+<footer>
+    <small>© <span id="year">2025</span> Pomegranate Fruit Disease Detection — Final Year Project</small>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+        getFirestore,
+        collection,
+        getDocs,
+        query,
+        where
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCv_QO6q82O10N8g4l9mZJXcKx4g4GLrzc",
+        authDomain: "pomo-db.firebaseapp.com",
+        projectId: "pomo-db",
+        storageBucket: "pomo-db.firebasestorage.app",
+        messagingSenderId: "81858695824",
+        appId: "1:81858695824:web:208d27956893b82046be15",
+        measurementId: "G-KEQ8YWQ78J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    /* ================================
+       i18n system
+    ================================ */
+    const I18N = {
+      en: {
+        headerTitle:"Pomegranate Disease Detection System",
+        navHome:"Home",
+        navDetector:"Disease Detector",
+        navDiseaseInfo:"Disease Info",
+        navHistory:"History",
+        navAboutUs:"About Us",
+        allUsers:"All Users",
+        username:"Username",
+        phone:"Phone",
+        action:"Action",
+        yourUploads:"Your Uploads"
+      },
+      kn: {
+        headerTitle:"ದಾಳಿಂಬೆ ರೋಗ ನಿರ್ಣಯ ವ್ಯವಸ್ಥೆ",
+        navHome:"ಮುಖಪುಟ",
+        navDetector:"ರೋಗ ಪತ್ತೆಗಾರ",
+        navDiseaseInfo:"ರೋಗ ಮಾಹಿತಿ",
+        navHistory:"ಇತಿಹಾಸ",
+        navAboutUs:"ನಮ್ಮ ಬಗ್ಗೆ",
+        allUsers:"ಎಲ್ಲಾ ಬಳಕೆದಾರರು",
+        username:"ಬಳಕೆದಾರರ ಹೆಸರು",
+        phone:"ದೂರವಾಣಿ",
+        action:"ಕ್ರಿಯೆ",
+        yourUploads:"ನಿಮ್ಮ ಅಪ್ಲೋಡ್‌ಗಳು"
+      }
+    };
+
+    function translatePage(lang) {
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+            const key = el.getAttribute("data-i18n");
+            if (I18N[lang] && I18N[lang][key]) {
+                el.textContent = I18N[lang][key];
+            }
+        });
+    }
+
+    /* ================================
+       Profile Widget
+    ================================ */
+    function initProfileWidget() {
+        const name = localStorage.getItem("username") || "User";
+        const phone =
+          localStorage.getItem("contactNumber") ||
+          localStorage.getItem("phone") ||
+          "N/A";
+
+        const role = localStorage.getItem("userRole") || "Student";
+
+        document.getElementById("greeting").textContent = `Hello, ${name}`;
+        document.getElementById("phone-number").textContent = phone;
+
+        if (role && role.toLowerCase() === "admin") {
+            document.getElementById("admin-badge").classList.remove("hidden");
+            document.getElementById("admin-badge").textContent = "Admin";
+        } else {
+            document.getElementById("admin-badge").classList.add("hidden");
+        }
+
+        document.getElementById("profile-header").onclick = (e) => {
+            e.stopPropagation();
+            const box = document.getElementById("details-content");
+            box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+        };
+        document.addEventListener("click", () => {
+            document.getElementById("details-content").style.display = "none";
+        });
+
+        document.querySelectorAll(".lang-button").forEach(btn => {
+            btn.onclick = () => {
+                const lang = btn.getAttribute("data-lang");
+                localStorage.setItem("language", lang);
+
+                document.querySelectorAll(".lang-button").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                translatePage(lang);
+            };
+        });
+
+        const savedLang = localStorage.getItem("language") || "en";
+        translatePage(savedLang);
+
+        document.querySelectorAll(".lang-button").forEach(b => {
+            if (b.getAttribute("data-lang") === savedLang) b.classList.add("active");
+        });
+
+        document.getElementById("logout-button").onclick = async () => {
+            await signOut(auth);
+            localStorage.clear();
+            window.location.href = "{{ url_for('login_page') }}";
+        };
+    }
+
+    /* ================================
+       Admin View (Firestore)
+    ================================ */
+    async function renderAdminTable() {
+        const tbody = document.getElementById("admin-table-body");
+        tbody.innerHTML = "";
+
+        const usersSnap = await getDocs(collection(db, "users"));
+
+        usersSnap.forEach(userDoc => {
+            const data = userDoc.data();
+            const name = data.name || "Unknown";
+            const phone = data.phone || "N/A";
+            const userId = userDoc.id;
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td style="padding:12px">${name}</td>
+                <td style="padding:12px">${phone}</td>
+                <td style="padding:12px">
+                    <button style="background:var(--button-color);color:white;padding:6px 12px;border:none;border-radius:8px"
+                            onclick="openUserModal('${name.replace(/'/g, "\\'")}', '${userId}')">
+                        View
+                    </button>
+                </td>`;
+            tbody.appendChild(row);
+        });
+    }
+
+    /* ================================
+       Modal content (per-user uploads)
+    ================================ */
+    async function openUserModal(name, userId) {
+        const box = document.getElementById("details-uploads-container");
+        box.innerHTML = "";
+        document.getElementById("details-username").textContent = name;
+
+        const qRef = query(
+            collection(db, "detections"),
+            where("userId", "==", userId)
+        );
+        const snap = await getDocs(qRef);
+
+        const docs = snap.docs.slice().sort((a, b) => {
+            const ta = a.data().createdAt?.toMillis?.() ?? 0;
+            const tb = b.data().createdAt?.toMillis?.() ?? 0;
+            return tb - ta;
+        });
+
+        docs.forEach(docSnap => {
+            const item = docSnap.data();
+            const d = item.createdAt?.toDate ? item.createdAt.toDate() : null;
+
+            const card = document.createElement("div");
+            card.className = "upload-card";
+
+            const dateStr = d ? d.toLocaleDateString() : "";
+            const timeStr = d ? d.toLocaleTimeString() : "";
+
+            card.innerHTML = `
+                <div class="upload-meta">
+                    <strong>${dateStr}</strong><br>
+                    ${timeStr}
+                </div>
+                <div class="upload-meta"><strong>User:</strong> ${item.username || name}</div>
+                <div class="upload-file"><strong>Image name:</strong> ${item.fileName || "N/A"}</div>
+                <div class="upload-disease"><strong>Detected:</strong> ${item.disease || "Unknown"}</div>
+            `;
+
+            if (item.imageUrl) {
+                const img = document.createElement("img");
+                img.src = item.imageUrl;
+                img.alt = item.fileName || "Fruit image";
+                img.className = "upload-image";
+                card.appendChild(img);
+            }
+
+            box.appendChild(card);
+        });
+
+        document.getElementById("user-details-modal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("user-details-modal").style.display = "none";
+    }
+
+    // expose for inline onclick
+    window.closeModal = closeModal;
+    window.openUserModal = openUserModal;
+
+    /* ================================
+       User view (current user)
+    ================================ */
+    async function renderUserUploads(userId) {
+        const container = document.getElementById("user-uploads-container");
+        container.innerHTML = "<p>Loading...</p>";
+
+        const qRef = query(
+            collection(db, "detections"),
+            where("userId", "==", userId)
+        );
+        const snap = await getDocs(qRef);
+
+        const docs = snap.docs.slice().sort((a, b) => {
+            const ta = a.data().createdAt?.toMillis?.() ?? 0;
+            const tb = b.data().createdAt?.toMillis?.() ?? 0;
+            return tb - ta;
+        });
+
+        container.innerHTML = "";
+        if (docs.length === 0) {
+            container.innerHTML = "<p>No uploads yet.</p>";
+            return;
+        }
+
+        docs.forEach(docSnap => {
+            const item = docSnap.data();
+            const d = item.createdAt?.toDate ? item.createdAt.toDate() : null;
+
+            const card = document.createElement("div");
+            card.className = "upload-card";
+
+            const dateStr = d ? d.toLocaleDateString() : "";
+            const timeStr = d ? d.toLocaleTimeString() : "";
+
+            card.innerHTML = `
+                <div class="upload-meta">
+                    <strong>${dateStr}</strong><br>
+                    ${timeStr}
+                </div>
+                <div class="upload-file"><strong>Image name:</strong> ${item.fileName || "N/A"}</div>
+                <div class="upload-disease"><strong>Detected:</strong> ${item.disease || "Unknown"}</div>
+            `;
+
+            if (item.imageUrl) {
+                const img = document.createElement("img");
+                img.src = item.imageUrl;
+                img.alt = item.fileName || "Fruit image";
+                img.className = "upload-image";
+                card.appendChild(img);
+            }
+
+            container.appendChild(card);
+        });
+    }
+
+    /* ================================
+       Chatbot
+    ================================ */
+    function setupChatbot() {
+        const chatbotBtn = document.getElementById("chatbot-btn");
+        const chatbotBox = document.getElementById("chatbot-box");
+        const closeChat = document.getElementById("close-chat");
+        const sendChat = document.getElementById("send-chat");
+        const chatInput = document.getElementById("chat-input");
+        const chatBody = document.getElementById("chat-body");
+
+        chatbotBtn.onclick = () => {
+            chatbotBox.style.display = "flex";
+        };
+        closeChat.onclick = () => {
+            chatbotBox.style.display = "none";
+        };
+        sendChat.onclick = () => sendChatMessage();
+        chatInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") sendChatMessage();
+        });
+
+        function sendChatMessage() {
+            const msg = chatInput.value.trim();
+            if (!msg) return;
+
+            const userMsg = document.createElement("div");
+            userMsg.className = "user-msg";
+            userMsg.textContent = msg;
+            chatBody.appendChild(userMsg);
+
+            chatInput.value = "";
+
+            setTimeout(() => {
+                const bot = document.createElement("div");
+                bot.className = "bot-msg";
+                bot.textContent = "I will help you with agricultural guidance!";
+                chatBody.appendChild(bot);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 600);
+
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    }
+
+    /* ================================
+       INIT
+    ================================ */
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("year").textContent = new Date().getFullYear();
+        setupChatbot();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                alert("Please login first.");
+                window.location.href = "{{ url_for('login_page') }}";
+                return;
+            }
+
+            initProfileWidget();
+
+            const rawRole = localStorage.getItem("userRole") || "Student";
+            const role = rawRole.toLowerCase();
+            const username = localStorage.getItem("username") || "User";
+            const prettyRole = role.charAt(0).toUpperCase() + role.slice(1);
+
+            document.getElementById("role-display").textContent =
+                `Logged in as: ${username} (${prettyRole})`;
+
+            if (role === "admin") {
+                document.getElementById("admin-history-view").style.display = "block";
+                document.getElementById("user-history-view").style.display = "none";
+                await renderAdminTable();
+            } else {
+                document.getElementById("admin-history-view").style.display = "none";
+                document.getElementById("user-history-view").style.display = "block";
+                await renderUserUploads(user.uid);
+            }
+        });
+    });
+</script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="pageTitle">Disease Detector - Upload Image</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Bootstrap CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet">
+<style>
+        /* --- Custom CSS Variables --- */
+        :root {
+            --college-primary-color: #8B404E;
+            --button-color: #CD607D;
+            --nude-pink-overlay: rgba(240, 220, 220, 0.55);
+            --light-bg-color: rgba(255, 255, 255, 0.9);
+            --text-color: #333;
+            --diseased-color: #dc3545;
+            --chatbot-color: var(--button-color);
+            --body-bg: #f8f9fa;
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            --nude-precautions-color: #F0DADA;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/static/Background_image.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--nude-pink-overlay);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            background-color: var(--college-primary-color);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
+        .navbar {
+            background-color: var(--button-color);
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-links li a {
+            display: block;
+            padding: 8px 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links li a[href="upload.html"] {
+            color: white;
+            background-color: var(--college-primary-color);
+            border-bottom: none;
+        }
+
+        .nav-links li a:hover:not([href="upload.html"]) {
+            background-color: #c0506e;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .content-box {
+            background-color: var(--light-bg-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--button-color);
+            border-bottom: 2px solid var(--button-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        button {
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1em;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #c0506e;
+        }
+
+        #detect-button:disabled {
+            background-color: var(--button-color);
+            opacity: 0.6;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        #detect-button:not(:disabled) {
+            background-color: var(--button-color);
+        }
+
+        #precautions-button {
+            display: none !important;
+        }
+
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            border: 3px dashed var(--button-color);
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--button-color);
+            background-color: var(--nude-pink-overlay);
+        }
+
+        #upload-instruction {
+            color: var(--text-color);
+        }
+
+        #file-list-container {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid var(--button-color);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-box h2 {
+            color: var(--college-primary-color);
+        }
+
+        .result-box .result-status {
+            font-size: 0.9em;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .result-status.healthy {
+            color: green;
+            background-color: #e6ffe6;
+        }
+
+        .result-status.diseased {
+            color: var(--diseased-color);
+            background-color: #ffe6e6;
+        }
+
+        .result-view-btn {
+            background-color: var(--nude-precautions-color) !important;
+            color: var(--college-primary-color) !important;
+            border: 1px solid var(--button-color) !important;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .result-view-btn:hover {
+            background-color: #E0CCCC !important;
+        }
+
+        .site-footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            background-color: var(--button-color);
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .footer-text {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        #chatbot-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--chatbot-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 70;
+            line-height: 60px;
+            text-align: center;
+            padding: 0;
+        }
+
+        .chatbot-box {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 320px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 80;
+        }
+
+        .chatbot-box.hidden {
+            display: none !important;
+        }
+
+        .chatbot-header {
+            background-color: var(--chatbot-color);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+        }
+
+        #close-chat {
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .chatbot-body {
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bot-msg,
+        .user-msg {
+            padding: 8px 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            max-width: 85%;
+            font-size: 0.9em;
+        }
+
+        .bot-msg {
+            background: #f0f0f0;
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        .user-msg {
+            background: #e0e0e0;
+            align-self: flex-end;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            outline: none;
+            font-size: 1em;
+        }
+
+        .chatbot-input button {
+            background: var(--chatbot-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            width: auto;
+            display: inline;
+            border-radius: 0;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+            width: auto;
+            padding: 5px;
+        }
+
+        .modal-card h4 {
+            color: var(--college-primary-color);
+            margin-top: 0;
+            border-bottom: 1px solid var(--button-color);
+            padding-bottom: 10px;
+        }
+
+        #modalList {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 15px 0 0 0;
+        }
+
+        #modalList li {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        /* Image Validation Modal */
+        .validation-modal {
+            max-width: 700px;
+        }
+
+        .validation-modal .image-preview-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .validation-modal .preview-item {
+            margin-bottom: 20px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .validation-modal .preview-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .validation-modal .preview-item-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--college-primary-color);
+        }
+
+        .validation-modal .validation-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .validation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .validation-buttons button {
+            flex: 1;
+        }
+
+        .validation-buttons .cancel-btn {
+            background-color: #6c757d !important;
+        }
+
+        .validation-buttons .cancel-btn:hover {
+            background-color: #5a6268 !important;
+        }
+
+        /* small preview in results */
+        .result-preview-img {
+            max-width: 100px;
+            max-height: 80px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .invalid-badge {
+            display: inline-block;
+            font-size: 0.8em;
+            padding: 4px 6px;
+            background: #fff0f0;
+            color: var(--diseased-color);
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin-top: 6px;
+        }
+
+        .detecting-badge {
+            display: inline-block;
+            font-size: 0.8em;
+            padding: 4px 6px;
+            background: #fff9f0;
+            color: #a67a00;
+            border: 1px solid #f0c36d;
+            border-radius: 4px;
+            margin-top: 6px;
+        }
+        html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.site-footer {
+    margin-top: auto;
+}
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-title" data-i18n="headerTitle">Pomegranate Disease Detection System</div>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            <li><a href="{{ url_for('home_page') }}">Home</a></li>
+            <li><a href="{{ url_for('upload_page') }}">Disease Detector</a></li>
+            <li><a href="{{ url_for('disease_page') }}">Disease Info</a></li>
+            <li><a href="{{ url_for('history_page') }}">History</a></li>
+            <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <div class="content-box">
+            <h1 data-i18n="mainHeading">Upload Image for Detection</h1>
+
+            <div class="upload-area" id="upload-area">
+                <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--button-color);"></i>
+                <p id="upload-instruction" data-i18n="uploadText">Drag & Drop your pomegranate image(s) here, or click
+                    to select file(s).</p>
+                <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
+                <button onclick="document.getElementById('image-upload').click()" data-i18n="browseButton">Browse
+                    Files</button>
+
+                <div id="file-list-container" style="width: 100%;"></div>
+
+                <img id="image-preview" alt="Image Preview" style="display: none;">
+            </div>
+
+            <button id="detect-button" style="margin-top: 20px;" disabled data-i18n="detectButton">Detect
+                Disease</button>
+
+            <button id="precautions-button" style="margin-top: 10px; display: none !important;">
+                <i class="fas fa-shield-alt" style="margin-right: 5px;"></i> View Preventive Precautions
+            </button>
+
+            <div class="result-box" id="result-box"></div>
+
+            <button id="learn-disease-btn" style="margin-top:20px; display:none;">
+                Learn About Disease
+            </button>
+        </div>
+    </div>
+
+    <button id="chatbot-btn" aria-label="Open Chatbot">💬</button>
+
+    <div id="chatbot-box" class="chatbot-box hidden">
+        <div class="chatbot-header">
+            <h3>Agro Chatbot</h3>
+            <span id="close-chat">✖</span>
+        </div>
+        <div class="chatbot-body" id="chatbot-body">
+            <p class="bot-msg">Hello 👋! I'm your pomegranate disease assistant. How can I help?</p>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="user-input" placeholder="Type your message..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-card">
+            <button id="modalClose" class="modal-close" aria-label="Close">✕</button>
+            <h4 id="modalTitle">Preventive Measures for <span id="modal-disease-name">Pomegranate Health</span></h4>
+            <ul id="modalList"></ul>
+        </div>
+    </div>
+
+    <!-- Image Validation Modal -->
+    <div id="validation-modal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-card validation-modal">
+            <button id="validationModalClose" class="modal-close" aria-label="Close">✕</button>
+            <h4>Confirm Pomegranate Images</h4>
+            <div class="validation-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Important:</strong> Please verify that all images below contain pomegranate fruits, leaves, or
+                plants. Only pomegranate images can be accurately analyzed by this system.
+            </div>
+            <div id="validation-preview" class="image-preview-container"></div>
+            <div class="validation-buttons">
+                <button id="validation-cancel" class="cancel-btn">Cancel</button>
+                <button id="validation-confirm">Confirm & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <small>© <span id="year">2025</span> Pomegranate Fruit Disease Detection — Final Year Project</small>
+        <span class="footer-text">See early, Save more!</span>
+    </footer>
+
+    <!-- 🔥 Firebase + upload logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+        // 🔹 Your Firebase config (updated)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCv_QO6q82O10N8g4l9mZJXcKx4g4GLrzc",
+            authDomain: "pomo-db.firebaseapp.com",
+            projectId: "pomo-db",
+            storageBucket: "pomo-db.firebasestorage.app",
+            messagingSenderId: "81858695824",
+            appId: "1:81858695824:web:208d27956893b82046be15",
+            measurementId: "G-KEQ8YWQ78J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ✅ Base URL to static folder (Flask fills it, e.g. "/static/")
+        const STATIC_ROOT = "{{ url_for('static', filename='') }}";
+
+        // ---------------------- Disease info ----------------------
+        const DISEASE_DATA = {
+            "Healthy": {
+                action: "Your crop appears healthy! Maintain current care routine and monitor regularly.",
+                precautions: [
+                    "Maintain optimal soil moisture, avoiding over- or under-watering.",
+                    "Apply balanced fertilizers based on soil tests to ensure vigorous growth.",
+                    "Ensure good air circulation by timely and proper pruning.",
+                    "Regularly monitor plants for any early signs of pests or disease."
+                ]
+            },
+            "Bacterial Blight": {
+                action: "Apply copper oxychloride spray (0.3%). Remove and burn affected plant parts immediately to prevent spread.",
+                precautions: [
+                    "Use copper-based bactericides (e.g., Copper Oxychloride) before the monsoon and at 10-15 day intervals.",
+                    "Remove and destroy severely affected plants and fallen leaves.",
+                    "Avoid irrigation during rains and high humidity periods to minimize leaf wetness.",
+                    "Disinfect pruning tools with a 10% bleach solution."
+                ]
+            },
+            "Alternaria": {
+                action: "Apply Mancozeb or Azoxystrobin fungicide. Improve canopy ventilation and reduce humidity.",
+                precautions: [
+                    "Spray systemic fungicides like Azoxystrobin or contact fungicides like Mancozeb at the recommended dosage.",
+                    "Ensure proper spacing between trees to facilitate air movement.",
+                    "Collect and destroy fallen fruits and infected debris.",
+                    "Prune affected branches during the dry season."
+                ]
+            },
+            "Anthracnose": {
+                action: "Use Propiconazole or Carbendazim fungicide. Avoid overhead irrigation and control pests that cause wounds.",
+                precautions: [
+                    "Apply Carbendazim (0.1%) or Propiconazole (0.05%) at flowering and fruit setting stages.",
+                    "Avoid water splashing/overhead irrigation which helps the fungus spread.",
+                    "Prune dense canopy areas to improve light penetration and air circulation.",
+                    "Plant resistant or tolerant varieties if available."
+                ]
+            },
+            "Cercospora": {
+                action: "Apply Carbendazim or Chlorothalonil fungicide. Implement better sanitation practices.",
+                precautions: [
+                    "Regularly spray fungicides such as Carbendazim or Chlorothalonil.",
+                    "Remove and destroy infected leaves and plant material.",
+                    "Maintain balanced nutrition to enhance plant resistance.",
+                    "Ensure good soil drainage."
+                ]
+            }
+        };
+
+        let detectedDisease = null;
+
+        // ✅ Save one detection log to Firestore (with correct imageUrl)
+        async function saveDetectionLog(fileData, disease, confidence) {
+            const user = auth.currentUser;
+            if (!user) {
+                console.warn("No logged-in user; skipping log save.");
+                return;
+            }
+
+            const username = localStorage.getItem("username") || "";
+            const phone = localStorage.getItem("contactNumber") || "";
+
+            const fileName = fileData?.file?.name || null;
+
+            // Your images live in static/disease image/
+            const imageUrl = fileName
+                ? STATIC_ROOT + "disease image/" + fileName
+                : null;
+
+            try {
+                await addDoc(collection(db, "detections"), {
+                    userId: user.uid,
+                    username: username,
+                    phone: phone,
+                    disease: disease,
+                    confidence: confidence ?? null,
+                    fileName: fileName,
+                    imageUrl: imageUrl,   // used in history.html
+                    createdAt: serverTimestamp()
+                });
+            } catch (err) {
+                console.error("Error saving detection log:", err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // 🔐 Ensure user is logged in
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    alert("Please login first to use the detector.");
+                    window.location.href = "{{ url_for('login_page') }}";
+                }
+            });
+
+            // ---------------- DOM references ----------------
+            const fileInput = document.getElementById('image-upload');
+            const detectButton = document.getElementById('detect-button');
+            const resultBox = document.getElementById('result-box');
+            const uploadArea = document.getElementById('upload-area');
+            const modal = document.getElementById('modal');
+            const modalClose = document.getElementById('modalClose');
+            const modalList = document.getElementById('modalList');
+            const modalDiseaseName = document.getElementById('modal-disease-name');
+            const modalTitle = document.getElementById('modalTitle');
+            const uploadInstruction = document.getElementById('upload-instruction');
+            const fileListContainer = document.getElementById('file-list-container');
+
+            const validationModal = document.getElementById('validation-modal');
+            const validationModalClose = document.getElementById('validationModalClose');
+            const validationPreview = document.getElementById('validation-preview');
+            const validationCancel = document.getElementById('validation-cancel');
+            const validationConfirm = document.getElementById('validation-confirm');
+
+            // Chatbot
+            const chatbotBtn = document.getElementById('chatbot-btn');
+            const chatbotBox = document.getElementById('chatbot-box');
+            const closeChat = document.getElementById('close-chat');
+            const chatBody = document.getElementById('chatbot-body');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            let uploadedFilesArray = [];
+            let fileIdCounter = 0;
+            let pendingFiles = [];
+
+            /* -------------------------
+               File list UI & removal
+               ------------------------- */
+            function updateFileListUI() {
+                fileListContainer.innerHTML = '';
+
+                if (uploadedFilesArray.length > 0) {
+                    uploadedFilesArray.forEach(fileData => {
+                        const fileElement = document.createElement('div');
+                        fileElement.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-top: 5px; background: #f9f9f9; border-radius: 5px; border: 1px solid #eee;';
+
+                        fileElement.innerHTML = `
+                            <span style="font-size: 0.9em; color: var(--text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${fileData.file.name}</span>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <button data-file-id="${fileData.id}" class="preview-file-btn" style="width:auto; padding:3px 8px; font-size:0.8em; background:#6c757d; color:#fff; border-radius:4px;">Preview</button>
+                                <button data-file-id="${fileData.id}" class="remove-file-btn" style="width: auto; padding: 3px 8px; font-size: 0.8em; background-color: var(--diseased-color); border-radius: 4px; color:#fff;">Remove</button>
+                            </div>
+                        `;
+                        fileListContainer.appendChild(fileElement);
+                    });
+                    detectButton.disabled = false;
+                } else {
+                    detectButton.disabled = true;
+                }
+                uploadInstruction.textContent = uploadedFilesArray.length > 0 ?
+                    `${uploadedFilesArray.length} file(s) ready for detection.` :
+                    'Drag & Drop your pomegranate image(s) here, or click to select file(s).';
+            }
+
+            fileListContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-file-btn')) {
+                    const fileId = parseInt(e.target.dataset.fileId);
+                    uploadedFilesArray = uploadedFilesArray.filter(fileData => fileData.id !== fileId);
+                    resultBox.style.display = 'none';
+                    updateFileListUI();
+                } else if (e.target.classList.contains('preview-file-btn')) {
+                    const fileId = parseInt(e.target.dataset.fileId);
+                    const fd = uploadedFilesArray.find(f => f.id === fileId);
+                    if (fd) {
+                        const reader = new FileReader();
+                        reader.onload = function (ev) {
+                            validationPreview.innerHTML =
+                                `<div class="preview-item">
+                                    <div class="preview-item-name">
+                                        <i class="fas fa-image"></i> ${fd.file.name}
+                                    </div>
+                                    <img src="${ev.target.result}" alt="${fd.file.name}">
+                                </div>`;
+                            validationModal.classList.remove('hidden');
+                            validationModal.setAttribute('aria-hidden', 'false');
+                        };
+                        reader.readAsDataURL(fd.file);
+                    }
+                }
+            });
+
+            /* -------------------------
+               Validation modal
+               ------------------------- */
+            function showValidationModal(files) {
+                pendingFiles = files;
+                validationPreview.innerHTML = '';
+
+                let loadedCount = 0;
+                const totalFiles = files.length;
+
+                Array.from(files).forEach((file) => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        previewItem.innerHTML = `
+                            <div class="preview-item-name">
+                                <i class="fas fa-image"></i> ${file.name}
+                            </div>
+                            <img src="${e.target.result}" alt="${file.name}">`;
+                        validationPreview.appendChild(previewItem);
+
+                        loadedCount++;
+                        if (loadedCount === totalFiles) {
+                            validationModal.classList.remove('hidden');
+                            validationModal.setAttribute('aria-hidden', 'false');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            validationConfirm.addEventListener('click', function () {
+                pendingFiles.forEach(file => {
+                    uploadedFilesArray.push({
+                        id: fileIdCounter++,
+                        file: file
+                    });
+                });
+                validationModal.classList.add('hidden');
+                validationModal.setAttribute('aria-hidden', 'true');
+                updateFileListUI();
+                pendingFiles = [];
+            });
+
+            validationCancel.addEventListener('click', function () {
+                validationModal.classList.add('hidden');
+                validationModal.setAttribute('aria-hidden', 'true');
+                pendingFiles = [];
+            });
+
+            validationModalClose.addEventListener('click', function () {
+                validationModal.classList.add('hidden');
+                validationModal.setAttribute('aria-hidden', 'true');
+                pendingFiles = [];
+            });
+
+            fileInput.addEventListener('change', function (e) {
+                if (e.target.files.length) {
+                    addFiles(e.target.files);
+                }
+                e.target.value = '';
+            });
+
+            function addFiles(files) {
+                const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+                if (imageFiles.length === 0) {
+                    alert('No valid image files were selected. Please upload image files only.');
+                    return;
+                }
+                const skippedFiles = files.length - imageFiles.length;
+                if (skippedFiles > 0) {
+                    alert(`${skippedFiles} non-image file(s) were skipped.`);
+                }
+                showValidationModal(imageFiles);
+            }
+
+            /* -------------------------
+               Drag & drop
+               ------------------------- */
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => uploadArea.classList.add('drag-over'), false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('drag-over'), false);
+            });
+            uploadArea.addEventListener('drop', handleDrop, false);
+            function handleDrop(e) {
+                let dt = e.dataTransfer;
+                let files = dt.files;
+                if (files.length) {
+                    addFiles(files);
+                }
+            }
+
+            /* -------------------------
+               Modal precautions viewer
+               ------------------------- */
+            window.viewPrecautionsForDisease = function (diseaseName) {
+                const data = DISEASE_DATA[diseaseName];
+                if (!data) {
+                    alert("Precautions not found for: " + diseaseName);
+                    return;
+                }
+                modalDiseaseName.textContent = diseaseName;
+                modalTitle.textContent = 'Preventive Measures for ' +
+                    (diseaseName === 'Healthy' ? 'Pomegranate Health' : diseaseName);
+                modalList.innerHTML = '';
+                data.precautions.forEach(p => {
+                    const li = document.createElement('li');
+                    li.innerHTML = p;
+                    modalList.appendChild(li);
+                });
+                modal.classList.remove('hidden');
+                modal.setAttribute('aria-hidden', 'false');
+            };
+            modalClose.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+            });
+
+            /* -------------------------
+               Detection flow
+               ------------------------- */
+            detectButton.addEventListener('click', async function () {
+                if (uploadedFilesArray.length === 0) return;
+
+                detectButton.disabled = true;
+                const originalDetectText = detectButton.textContent;
+                detectButton.textContent = `Analyzing ${uploadedFilesArray.length} images...`;
+                resultBox.style.display = 'block';
+                resultBox.innerHTML =
+                    `<h2 data-i18n="resultHeading">
+                        Batch Detection Summary (${uploadedFilesArray.length} files):
+                    </h2>
+                    <div id="per-file-results"></div>`;
+
+                const perFileContainer = document.getElementById('per-file-results');
+
+                uploadedFilesArray.forEach(fd => {
+                    const row = document.createElement('div');
+                    row.id = `result-row-${fd.id}`;
+                    row.style.cssText =
+                        'padding: 10px 0; border-bottom: 1px dashed #ddd; display:flex; gap:12px; align-items:center;';
+                    row.innerHTML = `
+                        <div style="flex-shrink:0;">
+                            <div style="width:100px; height:80px; display:flex;
+                                        align-items:center; justify-content:center;
+                                        background:#fff; border:1px solid #eee; border-radius:6px;">
+                                <i class="fas fa-spinner fa-pulse" style="color:#888;"></i>
+                            </div>
+                        </div>
+                        <div style="flex-grow:1; max-width:65%; ">
+                            <strong>File:</strong> ${fd.file.name}
+                            <div style="font-size:0.9em; margin-top:5px;">
+                                <span class="detecting-badge">Detecting...</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                            <span class="result-status" style="margin-bottom:5px; visibility:hidden;">STATUS</span>
+                            <div style="height:36px;"></div>
+                        </div>`;
+                    perFileContainer.appendChild(row);
+                });
+
+                let anyValid = 0;
+
+                for (let fd of uploadedFilesArray) {
+                    const row = document.getElementById(`result-row-${fd.id}`);
+                    if (!row) continue;
+
+                    const img = new Image();
+                    const objectUrl = URL.createObjectURL(fd.file);
+                    img.src = objectUrl;
+
+                    await new Promise((res) => {
+                        img.onload = () => res();
+                        img.onerror = () => res();
+                    });
+
+                    const previewDiv = row.querySelector('div:first-child');
+                    previewDiv.innerHTML =
+                        `<img src="${img.src}" class="result-preview-img" alt="${fd.file.name}">`;
+
+                    const statusSpan = row.querySelector('.result-status');
+                    const infoDiv =
+                        row.querySelector('div[style*="font-size:0.9em"]') ||
+                        row.querySelector('div:nth-child(2) > div');
+
+                    const form = new FormData();
+                    form.append('image', fd.file);
+
+                    try {
+                        const resp = await fetch('/predict', {
+                            method: 'POST',
+                            body: form
+                        });
+
+                        if (!resp.ok) {
+                            const text = await resp.text();
+                            console.error('Server error:', resp.status, text);
+                            statusSpan.className = 'result-status diseased';
+                            statusSpan.style.visibility = 'visible';
+                            statusSpan.textContent = 'ERROR';
+                            infoDiv.innerHTML =
+                                `<span class="invalid-badge">
+                                    Server error: ${resp.status}
+                                </span>`;
+                        } else {
+                            const json = await resp.json();
+
+                            let serverDisease = json.predicted_disease || 'Unknown';
+                            let confidenceStr = json.confidence_score || '0';
+
+                            if (typeof confidenceStr === 'string') {
+                                confidenceStr = confidenceStr.replace('%', '').trim();
+                            }
+                            const confVal = parseFloat(confidenceStr);
+                            console.log('File:', fd.file.name,
+                                'Disease:', serverDisease,
+                                'Conf raw:', json.confidence_score,
+                                'Conf parsed:', confVal);
+
+                            anyValid++;
+                            detectedDisease = serverDisease;
+
+                            const status =
+                                serverDisease === 'Healthy' ? 'healthy' : 'diseased';
+                            statusSpan.className = `result-status ${status}`;
+                            statusSpan.style.visibility = 'visible';
+                            statusSpan.textContent = status.toUpperCase();
+
+                            infoDiv.innerHTML =
+                                `Disease: <strong>${serverDisease}</strong> | Conf: ${json.confidence_score}`;
+
+                            const btnContainer = document.createElement('div');
+                            btnContainer.innerHTML =
+                                `<button class="result-view-btn"
+                                         onclick="viewPrecautionsForDisease('${serverDisease}')">
+                                     <i class="fas fa-shield-alt"></i> Precautions
+                                 </button>`;
+                            row.querySelector(
+                                'div[style*="display:flex; flex-direction:column"]'
+                            ).appendChild(btnContainer);
+
+                            // 🔥 Save this detection to Firestore (with imageUrl)
+                            await saveDetectionLog(fd, serverDisease, confVal);
+                        }
+                    } catch (err) {
+                        console.error('Network or fetch error:', err);
+                        statusSpan.className = 'result-status diseased';
+                        statusSpan.style.visibility = 'visible';
+                        statusSpan.textContent = 'ERROR';
+                        infoDiv.innerHTML =
+                            `<span class="invalid-badge">
+                                Network error — could not reach server
+                            </span>`;
+                    }
+
+                    URL.revokeObjectURL(objectUrl);
+                }
+
+                const validCount = anyValid;
+                const summaryNode = document.createElement('p');
+                summaryNode.style =
+                    `margin-top:15px; font-weight:bold; text-align:center; color:${
+                        validCount === 0 ? 'var(--diseased-color)' : 'var(--college-primary-color)'
+                    };`;
+
+                if (validCount === 0) {
+                    summaryNode.innerHTML =
+                        'No predictions could be generated. Please try again with clear images.';
+                } else {
+                    summaryNode.innerHTML =
+                        `${validCount} image(s) analyzed. Click 'Precautions' next to each detection for detailed advice.`;
+                }
+
+                const existingSummary =
+                    document.getElementById('detection-summary-node');
+                if (existingSummary) existingSummary.remove();
+                summaryNode.id = 'detection-summary-node';
+                perFileContainer.parentElement.appendChild(summaryNode);
+
+                const learnBtn = document.getElementById('learn-disease-btn');
+                learnBtn.style.display = 'block';
+                learnBtn.onclick = () => {
+                    if (!detectedDisease) {
+                        alert('No disease detected yet!');
+                        return;
+                    }
+                    const baseUrl = "{{ url_for('disease_page') }}";
+                    window.location.href =
+                        `${baseUrl}?d=${encodeURIComponent(detectedDisease.toLowerCase())}`;
+                };
+
+                detectButton.textContent = originalDetectText;
+                detectButton.disabled = false;
+            });
+
+            /* -------------------------
+               Chatbot
+               ------------------------- */
+            chatbotBtn.addEventListener('click', () => {
+                chatbotBox.classList.toggle('hidden');
+            });
+            closeChat.addEventListener('click', () => {
+                chatbotBox.classList.add('hidden');
+            });
+            sendBtn.addEventListener('click', () => {
+                const txt = userInput.value.trim();
+                if (!txt) return;
+                const userMsg = document.createElement('div');
+                userMsg.className = 'user-msg';
+                userMsg.textContent = txt;
+                chatBody.appendChild(userMsg);
+                userInput.value = '';
+                setTimeout(() => {
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'bot-msg';
+                    botMsg.textContent =
+                        "Thanks — for detailed help about a detection, click 'Precautions' for the detected disease or upload a clear pomegranate image.";
+                    chatBody.appendChild(botMsg);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 700);
+            });
+
+            /* -------------------------
+               Close validation modal on outside click
+               ------------------------- */
+            validationModal.addEventListener('click', (e) => {
+                if (e.target === validationModal) {
+                    validationModal.classList.add('hidden');
+                    validationModal.setAttribute('aria-hidden', 'true');
+                    pendingFiles = [];
+                }
+            });
+        });
+    </script>
+    <!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

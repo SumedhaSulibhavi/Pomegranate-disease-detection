@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="pageTitle">Home - Pomegranate Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+<!-- Bootstrap CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet">
+
+    <style>
+        /* Custom font import for a cleaner look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+        /* ================================================= */
+        /* === 1. Custom CSS Variables (Theming) === */
+        /* ================================================= */
+        :root {
+            --college-primary-color: #8B404E; /* Deep Rose/Cranberry for Header, primary */
+            --button-color: #CD607D; /* Muted Rose/Pink for Buttons, accents (Browse/Chatbot) */
+            --nude-pink-overlay: rgba(240, 220, 220, 0.55); /* Light, semi-transparent Nude Pink */
+            --light-bg-color: rgba(255, 255, 255, 0.95); /* Content box background (more opaque) */
+            --text-color: #333; /* Standard black/dark grey text color */
+            --chatbot-color: var(--button-color);
+            --body-bg: #f8f9fa; /* Fallback background for the body */
+        }
+
+        /* ================================================= */
+        /* === 2. Background and Base Body Styles === */
+        /* ================================================= */
+        body {
+            font-family: 'Inter', Arial, sans-serif; /* Use Inter font */
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('/static/Background_image.jpg'); 
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--body-bg);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--nude-pink-overlay);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ================================================= */
+        /* === 3. Header Styles === */
+        /* ================================================= */
+        header {
+            background-color: var(--college-primary-color);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 60;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .header-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
+        /* ================================================= */
+        /* === 4. Navigation Bar Styles === */
+        /* ================================================= */
+        .navbar {
+            background-color: var(--button-color);
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 20;
+        }
+        .nav-links {
+            list-style: none; padding: 0; margin: 0; display: flex;
+            justify-content: center; max-width: 1200px; margin: 0 auto;
+            padding: 0 20px;
+        }
+        .nav-links li a {
+            display: block; padding: 8px 20px; text-decoration: none;
+            color: white; font-weight: bold; transition: background-color 0.3s;
+        }
+        .nav-links li a[href="home.html"] {
+            color: white; background-color: var(--college-primary-color); border-bottom: none;
+        }
+        .nav-links li a:hover:not([href="home.html"]) {
+            background-color: #c0506e;
+        }
+
+        /* ================================================= */
+        /* === 5. Main Content Layout === */
+        /* ================================================= */
+        .main-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+        .content-box {
+            background-color: var(--light-bg-color);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border: 2px dashed var(--button-color);
+        }
+        
+        h1 {
+            color: var(--college-primary-color);
+            font-size: 6rem; /* increased */
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .welcome-grid {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        .description-text {
+            flex: 1;
+            line-height: 1.7;
+            font-size: 1.1em;
+            text-align: justify;
+            margin-top: 20px;
+        }
+        .pomegranate-image-container {
+            flex-shrink: 0;
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        .pomegranate-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .pomegranate-image-container img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Large Upload Button (Reduced Size) */
+        .upload-action-btn {
+            display: block;
+            width: 70%;
+            max-width: 420px;
+            margin: 0px auto 10px auto;
+            padding: 12px 25px;
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .upload-action-btn i {
+            margin-right: 12px;
+        }
+        .upload-action-btn:hover {
+            background-color: var(--college-primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* ================================================= */
+        /* === 6. Chatbot Button Styles === */
+        /* ================================================= */
+        #chatbot-btn {
+            position: fixed; bottom: 25px; right: 25px;
+            background-color: var(--chatbot-color);
+            color: white; border: none; border-radius: 50%; width: 60px; height: 60px;
+            font-size: 1.8rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 70; line-height: 60px; text-align: center;
+            padding: 0;
+        }
+
+        /* === CHATBOT WINDOW (NEW) === */
+        #chatbot-container {
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 340px;
+            max-height: 480px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 80;
+        }
+        #chatbot-container.open {
+            display: flex;
+        }
+        .chatbot-header {
+            background: var(--college-primary-color);
+            color: #fff;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .chatbot-header span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        .chatbot-close {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .chatbot-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #faf5f7;
+        }
+        .chatbot-input-area {
+            padding: 8px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: #fff;
+        }
+        .chatbot-input-area input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 999px;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .chatbot-input-area button {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: none;
+            background: var(--button-color);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .chat-msg {
+            margin-bottom: 8px;
+            max-width: 80%;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+        .chat-msg.user {
+            margin-left: auto;
+            background: var(--button-color);
+            color: #fff;
+            border-bottom-right-radius: 2px;
+        }
+        .chat-msg.bot {
+            margin-right: auto;
+            background: #fff;
+            border: 1px solid #f1c4d0;
+            border-bottom-left-radius: 2px;
+        }
+        .chat-typing {
+            font-size: 0.8rem;
+            color: #777;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        /* ================================================= */
+        /* === 7. Footer Style === */
+        /* ================================================= */
+        .site-footer {
+            text-align: center;
+            padding: 15px 10px;
+            margin-top: auto;
+            border-top: 1px solid #eee;
+            background-color: var(--button-color);
+            color: white;
+            font-size: 0.9em;
+        }
+        .footer-text {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* ================================================= */
+        /* === 8. Profile Widget Custom Overrides & Positioning === */
+        /* ================================================= */
+        #profile-widget {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: auto;
+            max-width: 300px;
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
+            overflow: visible;
+            z-index: 65;
+        }
+
+        #profile-widget #profile-header {
+            background-color: transparent;
+            padding: 5px 10px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: fit-content;
+            margin-left: auto;
+            color: white;
+            cursor: pointer;
+        }
+        #profile-widget #profile-header:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        #profile-widget .w-12.h-12.bg-\[\#F0DCDC\] {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            background-color: white;
+            border: 2px solid var(--button-color);
+            color: var(--button-color);
+        }
+        #profile-widget .w-12.h-12.bg-\[\#F0DCDC\] svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        #profile-widget #greeting {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-left: 8px;
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+
+        #profile-widget #admin-badge {
+            background-color: var(--nude-pink-overlay);
+            color: var(--college-primary-color);
+        }
+
+        #profile-widget #details-content {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border: 1px solid var(--button-color);
+            padding: 15px;
+            width: 220px;
+            z-index: 70;
+        }
+        #profile-widget #details-content.hidden {
+            display: none !important;
+        }
+
+        .lang-button {
+            transition: all 0.2s;
+            min-width: 80px;
+            border-radius: 8px;
+        }
+        .lang-button.active {
+            background-color: var(--button-color) !important;
+            color: white !important;
+            border-color: var(--button-color) !important;
+            box-shadow: 0 4px 12px rgba(205, 96, 125, 0.4) !important;
+        }
+        .lang-button:not(.active) {
+            background-color: #f8f8f8 !important;
+            color: var(--text-color) !important;
+            border-color: #ddd !important;
+            box-shadow: none !important;
+        }
+        .lang-button:not(.active):hover {
+            background-color: #eee !important;
+        }
+
+        #logout-button {
+            background-color: var(--button-color) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #logout-button:hover {
+            background-color: var(--college-primary-color) !important;
+        }
+
+        @media (max-width: 850px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .welcome-grid {
+                flex-direction: column;
+                text-align: center;
+            }
+            .pomegranate-image-container {
+                width: 100%;
+                height: 250px;
+            }
+            .upload-action-btn {
+                width: 100%;
+            }
+            .header-content { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                height: auto; 
+                padding-bottom: 5px; 
+            }
+            #profile-widget { 
+                position: static; 
+                transform: none; 
+                margin-top: 10px; 
+                width: 100%; 
+                right: auto; 
+                top: auto; 
+            }
+            #profile-widget #profile-header { 
+                width: 100%; 
+                justify-content: flex-start; 
+                padding: 8px 15px; 
+            }
+            #profile-widget #details-content { 
+                position: static; 
+                width: 100%; 
+                margin-top: 10px; 
+            }
+            #chatbot-container {
+                right: 10px;
+                width: 90%;
+                bottom: 85px;
+            }
+            #chatbot-btn {
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="header-title" data-i18n="headerTitle">
+                Pomegranate Disease Detection System
+            </div>
+
+            <div id="profile-widget">
+                <div id="profile-header" class="p-4 text-white cursor-pointer flex items-center space-x-4 transition-shadow duration-300 hover:bg-[#A55260] focus:outline-none">
+                    <div class="w-12 h-12 bg-[#F0DCDC] rounded-full border-2 border-white flex items-center justify-center text-[#8B404E] shadow-md transition-transform duration-300 hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p id="greeting" class="text-lg font-semibold tracking-wide">Hello, Student</p>
+                        <span id="admin-badge" class="hidden inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#F5E2E6] text-[#CD607D] mt-1 shadow-sm">
+                            Admin
+                        </span>
+                    </div>
+                </div>
+
+                <div id="details-content" class="p-4 space-y-4 hidden border-t border-gray-100">
+                    <div>
+                        <label id="phone-label" class="block text-xs font-medium text-gray-500 mb-1">Contact Phone</label>
+                        <p id="phone-number" class="text-sm font-medium text-gray-800">N/A</p>
+                    </div>
+
+                    <div>
+                        <label id="language-label" class="block text-xs font-medium text-gray-500 mb-2">Display Language</label>
+                        <div class="flex space-x-2">
+                            <button data-lang="en" class="lang-button active px-3 py-1 text-sm rounded-lg border border-[#CD607D] text-white shadow-md hover:bg-[#8B404E] focus:outline-none focus:ring-2 focus:ring-[#CD607D]">
+                                English
+                            </button>
+                            <button data-lang="kn" class="lang-button px-3 py-1 text-sm rounded-lg border border-gray-300 text-gray-700 bg-white shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#CD607D]">
+                                ಕನ್ನಡ
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="logout-button" class="w-full py-2 text-sm font-semibold rounded-lg bg-[#F5E2E6] text-[#8B404E] border border-[#F0DCDC] shadow-md hover:bg-[#F0DCDC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#CD607D] mt-2">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{ url_for('login_page') }}">Login</a></li>
+            <li><a href="{{ url_for('home_page') }}">Home</a></li>
+            <li><a href="{{ url_for('upload_page') }}">Disease Detector</a></li>
+            <li><a href="{{ url_for('disease_page') }}">Disease Info</a></li>
+            <li><a href="{{ url_for('history_page') }}">History</a></li>
+            <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <div class="content-box">
+            <h1 data-i18n="mainHeading">Welcome to the Pomegranate Health Portal!</h1>
+
+            <div class="welcome-grid">
+                <div class="description-text">
+                    <p data-i18n="descriptionText">
+                        This portal is your AI-powered assistant dedicated to the early detection and management of pomegranate crop diseases. Our system analyzes images of leaves and fruits to provide instant, accurate diagnoses and recommended treatments, helping you safeguard your yield. Our goal is to leverage technology to provide farmers and researchers with a quick, reliable, and easy-to-use tool for crop health monitoring. Early detection is key to preventing major losses. Click the button below to start your first detection.
+                    </p>
+                </div>
+
+                <div class="pomegranate-image-container">
+                    <img src="/static/healthy_pomegranate.jpg" alt="A healthy pomegranate fruit." data-i18n-alt="pomegranateImageAlt">
+                </div>
+            </div>
+
+            <a href="{{ url_for('upload_page') }}" class="upload-action-btn" data-i18n="uploadButton">
+                <i class="fas fa-camera"></i> Start Disease Detection Now
+            </a>
+        </div>
+    </div>
+
+    <!-- Chatbot toggle button -->
+    <button id="chatbot-btn" aria-label="Open Chatbot">💬</button>
+
+    <!-- === CHATBOT WINDOW (ONLY ON HOME) === -->
+    <div id="chatbot-container">
+        <div class="chatbot-header">
+    <div>
+        <div>Crop Health Chatbot</div>
+        <span>Ask about pomegranate diseases, symptoms, care</span>
+    </div>
+
+    <!-- Language dropdown + close -->
+    <div style="display: flex; align-items: center; gap: 6px;">
+        <select id="chatbot-language" style="font-size: 0.75rem; padding: 2px 4px; border-radius: 6px; border: none; outline: none; color:#333;">
+            <option value="en">EN</option>
+            <option value="hi">HI</option>
+            <option value="kn">KN</option>
+        </select>
+        <div class="chatbot-close" id="chatbot-close" style="margin-left:4px; cursor:pointer;">&times;</div>
+    </div>
+</div>
+
+<div class="chatbot-messages" id="chatbot-messages">
+    <div class="chat-msg bot">
+        Hi! 👋 I can help you understand pomegranate diseases, symptoms, and treatments.  
+        Type or speak your question to begin.
+    </div>
+</div>
+
+<div class="chatbot-input-area">
+    <!-- small recording dot / text -->
+    <span id="chatbot-recording-indicator" style="font-size: 0.75rem; color:#c0392b; display:none; margin-right:4px;">
+        ● Recording...
+    </span>
+
+    <input type="text" id="chatbot-input" placeholder="Type your question...">
+
+    <!-- Mic button -->
+    <button id="chatbot-mic" title="Speak">
+        🎤
+    </button>
+
+    <!-- Stop audio button -->
+    <button id="chatbot-stop" title="Stop voice" style="padding: 6px 8px; font-size: 0.8rem;">
+        ⏹
+    </button>
+
+    <button id="chatbot-send">Send</button>
+</div>
+
+        </div>
+        
+    </div>
+    <!-- === END CHATBOT WINDOW === -->
+
+    <footer class="site-footer">
+        <small data-i18n="footerCopyright">© <span id="year">2025</span> Pomegranate Fruit Disease Detection — Final Year Project</small>
+        <span class="footer-text" data-i18n="footerSlogan">See early, Save more!</span>
+    </footer>
+
+    <!-- Existing translation / profile JS (unchanged) -->
+    <script>
+        const translations = {
+            en: {
+                pageTitle: "Home - Pomegranate Detection",
+                headerTitle: "Pomegranate Disease Detection System",
+                navHome: "Home",
+                navAboutUs: "About Us",
+                navDiseaseInfo: "Disease Info",
+                navDetector: "Disease Detector",
+                navHistory: "History",
+                mainHeading: (name) => `Welcome to the Pomegranate Health Portal, <strong>${name}</strong>!`,
+                descriptionText: "This portal is your AI-powered assistant dedicated to the early detection and management of pomegranate crop diseases. Our system analyzes images of leaves and fruits to provide instant, accurate diagnoses and recommended treatments, helping you safeguard your yield. Our goal is to leverage technology to provide farmers and researchers with a quick, reliable, and easy-to-use tool for crop health monitoring. Early detection is key to preventing major losses. Click the button below to start your first detection.",
+                uploadButton: "Start Disease Detection Now",
+                pomegranateImageAlt: "A healthy pomegranate fruit.",
+                footerCopyright: (year) => `© ${year} Pomegranate Fruit Disease Detection — Final Year Project`,
+                footerSlogan: "See early, Save more!",
+            },
+            kn: {
+                pageTitle: "ಮುಖಪುಟ - ದಾಳಿಂಬೆ ರೋಗ ಪತ್ತೆ",
+                headerTitle: "ದಾಳಿಂಬೆ ರೋಗ ಪತ್ತೆ ವ್ಯವಸ್ಥೆ",
+                navHome: "ಮುಖಪುಟ",
+                navAboutUs: "ನಮ್ಮ ಬಗ್ಗೆ",
+                navDiseaseInfo: "ರೋಗ ಮಾಹಿತಿ",
+                navDetector: "ರೋಗ ಪತ್ತೆಕಾರಕ",
+                navHistory: "ಇತಿಹಾಸ",
+                mainHeading: (name) => `ದಾಳಿಂಬೆ ಆರೋಗ್ಯ ಪೋರ್ಟಲ್‌ಗೆ ಸುಸ್ವಾಗತ, <strong>${name}</strong>!`,
+                descriptionText: "ಈ ಪೋರ್ಟಲ್ ದಾಳಿಂಬೆ ಬೆಳೆಯ ರೋಗಗಳನ್ನು ಮೊದಲೇ ಪತ್ತೆಹಚ್ಚಲು ಮತ್ತು ನಿರ್ವಹಿಸಲು ಮೀಸಲಾದ ನಿಮ್ಮ AI-ಚಾಲಿತ ಸಹಾಯಕವಾಗಿದೆ. ನಮ್ಮ ವ್ಯವಸ್ಥೆಯು ಎಲೆಗಳು ಮತ್ತು ಹಣ್ಣುಗಳ ಚಿತ್ರಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ ತಕ್ಷಣದ, ನಿಖರವಾದ ರೋಗನಿರ್ಣಯ ಮತ್ತು ಶಿಫಾರಸು ಮಾಡಿದ ಚಿಕಿತ್ಸೆಗಳನ್ನು ನೀಡುತ್ತದೆ, ನಿಮ್ಮ ಇಳುವರಿಯನ್ನು ರಕ್ಷಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ. ಬೆಳೆ ಆರೋಗ್ಯ ಮೇಲ್ವಿಚಾರಣೆಗಾಗಿ ರೈತರು ಮತ್ತು ಸಂಶೋಧಕರಿಗೆ **ತ್ವರಿತ, ವಿಶ್ವಾಸಾರ್ಹ ಮತ್ತು ಬಳಸಲು ಸುಲಭವಾದ** ಸಾಧನವನ್ನು ಒದಗಿಸಲು ತಂತ್ರಜ್ಞಾನವನ್ನು ಬಳಸುವುದೇ ನಮ್ಮ ಗುರಿಯಾಗಿದೆ. ಪ್ರಮುಖ ನಷ್ಟಗಳನ್ನು ತಡೆಯಲು ಆರಂಭಿಕ ಪತ್ತೆ ಮುಖ್ಯವಾಗಿದೆ. ನಿಮ್ಮ ಮೊದಲ ಪತ್ತೆ ಕಾರ್ಯವನ್ನು ಪ್ರಾರಂಭಿಸಲು ಕೆಳಗಿನ ಬಟನ್ ಅನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.",
+                uploadButton: "ರೋಗ ಪತ್ತೆ ಕಾರ್ಯವನ್ನು ಈಗಲೇ ಪ್ರಾರಂಭಿಸಿ",
+                pomegranateImageAlt: "ಒಂದು ಆರೋಗ್ಯಕರ ದಾಳಿಂಬೆ ಹಣ್ಣು.",
+                footerCopyright: (year) => `© ${year} ದಾಳಿಂಬೆ ಹಣ್ಣಿನ ರೋಗ ಪತ್ತೆ — ಅಂತಿಮ ವರ್ಷದ ಯೋಜನೆ`,
+                footerSlogan: "ಬೇಗ ನೋಡಿ, ಹೆಚ್ಚು ಉಳಿಸಿ!",
+            }
+        };
+
+        const widgetTranslations = {
+            en: {
+                greeting: (name) => `Hello, ${name}`,
+                phoneLabel: "Contact Phone",
+                languageLabel: "Display Language",
+                logoutButton: "Logout"
+            },
+            kn: {
+                greeting: (name) => `ನಮಸ್ಕಾರ, ${name}`,
+                phoneLabel: "ಸಂಪರ್ಕ ದೂರವಾಣಿ",
+                languageLabel: "ಭಾಷೆ ಆರಿಸಿ",
+                logoutButton: "ಲಾಗ್ ಔಟ್"
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'en';
+
+        function translatePage(lang) {
+            const username = localStorage.getItem('username') || 'Student';
+            const currentLangData = translations[lang];
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (currentLangData[key]) {
+                    let content;
+
+                    if (typeof currentLangData[key] === 'function') {
+                        content = currentLangData[key](key === 'footerCopyright' ? new Date().getFullYear() : username);
+                    } else {
+                        content = currentLangData[key];
+                    }
+                    
+                    if (key === 'mainHeading') {
+                        element.innerHTML = content;
+                    } else if (key === 'descriptionText') {
+                        element.innerHTML = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    } else if (element.tagName === 'TITLE') {
+                        document.title = content;
+                    } else {
+                        element.textContent = content;
+                    }
+                }
+            });
+            
+            const altElement = document.querySelector('[data-i18n-alt]');
+            const altKey = altElement.getAttribute('data-i18n-alt');
+            altElement.setAttribute('alt', currentLangData[altKey] || 'Pomegranate fruit image');
+
+            updateWidgetLanguageDisplay(lang);
+
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+        }
+
+        const profileWidget = document.getElementById('profile-widget');
+        const profileHeader = document.getElementById('profile-header');
+        const detailsContent = document.getElementById('details-content');
+        const greetingElement = document.getElementById('greeting');
+        const adminBadgeElement = document.getElementById('admin-badge');
+        const phoneLabelElement = document.getElementById('phone-label');
+        const phoneNumberElement = document.getElementById('phone-number');
+        const languageLabelElement = document.getElementById('language-label');
+        const langButtons = document.querySelectorAll('.lang-button');
+        const logoutButton = document.getElementById('logout-button');
+
+        function updateWidgetLanguageDisplay(lang) {
+            const username = localStorage.getItem('username') || 'Student';
+            const texts = widgetTranslations[lang];
+
+            greetingElement.textContent = texts.greeting(username);
+            phoneLabelElement.textContent = texts.phoneLabel;
+            languageLabelElement.textContent = texts.languageLabel;
+            logoutButton.textContent = texts.logoutButton;
+
+            langButtons.forEach(button => {
+                const isSelected = button.dataset.lang === lang;
+                button.classList.toggle('active', isSelected);
+            });
+        }
+
+        function loadUserData() {
+            const username = localStorage.getItem('username') || 'Student';
+            const contact = localStorage.getItem('contactNumber') || 'N/A';
+            const role = localStorage.getItem('userRole') || 'Student';
+
+            phoneNumberElement.textContent = contact;
+
+            if (role.toLowerCase() === 'admin') {
+                adminBadgeElement.classList.remove('hidden');
+            } else {
+                adminBadgeElement.classList.add('hidden');
+            }
+
+            const initialLang = localStorage.getItem('language') || 'en';
+            translatePage(initialLang);
+        }
+
+        function logout(e) {
+            e.preventDefault();
+            localStorage.removeItem('username');
+            localStorage.removeItem('contactNumber');
+            localStorage.removeItem('userRole');
+            localStorage.setItem('language', 'en'); 
+            
+            loadUserData();
+            detailsContent.classList.add('hidden');
+            alert('Logout successful! Redirecting to login page.');
+            window.location.href = "/login";
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            if (!localStorage.getItem('username')) {
+                window.location.href = "/login";
+            }
+
+            loadUserData();
+
+            profileHeader.addEventListener('click', (e) => {
+                e.stopPropagation();
+                detailsContent.classList.toggle('hidden');
+            });
+            document.addEventListener('click', (e) => {
+                if (!profileWidget.contains(e.target) && !detailsContent.classList.contains('hidden')) {
+                    detailsContent.classList.add('hidden');
+                }
+            });
+
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedLang = button.dataset.lang;
+                    if (selectedLang !== currentLang) {
+                        translatePage(selectedLang);
+                    }
+                    detailsContent.classList.add('hidden');
+                });
+            });
+
+            logoutButton.addEventListener('click', logout);
+        });
+    </script>
+
+    <!-- === CHATBOT FRONT-END LOGIC (ONLY ON HOME) === -->
+    <!-- === CHATBOT FRONT-END LOGIC (ONLY ON HOME) === -->
+<!-- === CHATBOT FRONT-END LOGIC (ONLY ON HOME) === -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 🔗 Backend URL for chatbot_app.py
+        const CHATBOT_BASE_URL = "http://127.0.0.1:5000";
+
+        const chatBtn = document.getElementById('chatbot-btn');
+        const chatContainer = document.getElementById('chatbot-container');
+        const chatClose = document.getElementById('chatbot-close');
+        const chatMessages = document.getElementById('chatbot-messages');
+        const chatInput = document.getElementById('chatbot-input');
+        const chatSend = document.getElementById('chatbot-send');
+
+        const langSelect = document.getElementById('chatbot-language');
+        const micBtn = document.getElementById('chatbot-mic');
+        const stopBtn = document.getElementById('chatbot-stop');
+        const recordingIndicator = document.getElementById('chatbot-recording-indicator');
+
+        // Use same language as UI if stored
+        const savedLang = localStorage.getItem('language');
+        if (savedLang && (savedLang === 'en' || savedLang === 'hi' || savedLang === 'kn')) {
+            langSelect.value = savedLang;
+        }
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let currentAudio = null; // for bot voice output
+
+        // -----------------------------
+        // Helper: Append message
+        // -----------------------------
+        function appendMessage(text, sender = 'bot') {
+            const msg = document.createElement('div');
+            msg.classList.add('chat-msg', sender);
+            msg.textContent = text;
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function appendTyping() {
+            const typing = document.createElement('div');
+            typing.classList.add('chat-typing');
+            typing.id = 'chat-typing';
+            typing.textContent = 'Bot is thinking...';
+            chatMessages.appendChild(typing);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTyping() {
+            const t = document.getElementById('chat-typing');
+            if (t) t.remove();
+        }
+
+        // -----------------------------
+        // Send text (or from voice) to /chat
+        // -----------------------------
+        async function sendMessage(fromVoice = false, overrideText = null) {
+            const text = (overrideText !== null ? overrideText : chatInput.value.trim());
+            if (!text) return;
+
+            appendMessage(text, 'user');
+            if (overrideText === null) {
+                chatInput.value = '';
+            }
+            appendTyping();
+
+            const language = langSelect.value || 'en';
+
+            try {
+                const res = await fetch(`${CHATBOT_BASE_URL}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_message: text,
+                        language_code: language,
+                        from_voice: fromVoice
+                    })
+                });
+
+                if (!res.ok) {
+                    removeTyping();
+                    appendMessage('Error contacting chatbot. Please try again.', 'bot');
+                    return;
+                }
+
+                const data = await res.json();
+                removeTyping();
+
+                if (data.bot_response) {
+                    appendMessage(data.bot_response, 'bot');
+                } else {
+                    appendMessage('Sorry, I did not get a response from the server.', 'bot');
+                }
+
+                // 🔊 If from voice and we have audio, play it
+                if (fromVoice && data.audio_response) {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio.currentTime = 0;
+                    }
+                    currentAudio = new Audio("data:audio/mp3;base64," + data.audio_response);
+                    currentAudio.play();
+                }
+            } catch (err) {
+                console.error(err);
+                removeTyping();
+                appendMessage('Error contacting chatbot. Please try again.', 'bot');
+            }
+        }
+
+        // -----------------------------
+        // Voice: start/stop recording
+        // -----------------------------
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                isRecording = true;
+                recordingIndicator.style.display = 'inline';
+
+                mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+                mediaRecorder.onstop = handleRecordingStop;
+                mediaRecorder.start();
+            } catch (err) {
+                appendMessage("🎤 Microphone not accessible: " + err.message, 'bot');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                recordingIndicator.style.display = 'none';
+            }
+        }
+
+        async function handleRecordingStop() {
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+            const formData = new FormData();
+            formData.append('file', blob, 'speech.webm');
+            formData.append('language_code', langSelect.value || 'en');
+
+            appendMessage("🎤 Processing your voice...", 'user');
+
+            try {
+                const res = await fetch(`${CHATBOT_BASE_URL}/speech`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) {
+                    appendMessage("⚠️ Error contacting speech service.", 'bot');
+                    return;
+                }
+
+                const speechData = await res.json();
+
+                if (speechData.transcribed_text?.startsWith("ERROR")) {
+                    appendMessage("⚠️ Speech recognition failed.", 'bot');
+                    return;
+                }
+
+                const userText = speechData.transcribed_text;
+                // Show transcribed text as user message and send as fromVoice
+                appendMessage(userText, 'user');
+                appendTyping();
+                await sendMessage(true, userText);
+            } catch (err) {
+                appendMessage("⚠️ Error contacting speech service: " + err.message, 'bot');
+            }
+        }
+
+        // -----------------------------
+        // Stop audio playback
+        // -----------------------------
+        function stopAudioPlayback() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                appendMessage("🔇 Voice output stopped.", 'bot');
+            }
+        }
+
+        // -----------------------------
+        // UI Event Listeners
+        // -----------------------------
+        if (chatBtn) {
+            chatBtn.addEventListener('click', () => {
+                chatContainer.classList.toggle('open');
+                if (chatContainer.classList.contains('open')) {
+                    chatInput.focus();
+                }
+            });
+        }
+
+        if (chatClose) {
+            chatClose.addEventListener('click', () => {
+                chatContainer.classList.remove('open');
+            });
+        }
+
+        if (chatSend) {
+            chatSend.addEventListener('click', () => sendMessage(false));
+        }
+
+        if (chatInput) {
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage(false);
+                }
+            });
+        }
+
+        if (micBtn) {
+            micBtn.addEventListener('click', () => {
+                if (isRecording) {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            });
+        }
+
+        if (stopBtn) {
+            stopBtn.addEventListener('click', stopAudioPlayback);
+        }
+    });
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

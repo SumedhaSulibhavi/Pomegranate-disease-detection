@@ -1,0 +1,4 @@
+model_best.pth
+venv/
+__pycache__/
+.env

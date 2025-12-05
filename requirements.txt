@@ -1,0 +1,11 @@
+flask
+flask-cors
+requests
+pydub
+gtts
+SpeechRecognition
+torch
+torchvision
+timm
+pillow
+numpy

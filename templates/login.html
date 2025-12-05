@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomegranate Portal - Login/Signup</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Bootstrap CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet">
+
+  <style>
+    :root {
+      --college-primary-color: #8b404e;
+      --button-color: #cd607d;
+      --nude-pink-overlay: rgba(240, 220, 220, 0.55);
+      --success-color: #28a745;
+      --error-color: #dc3545;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      min-height: 100vh;
+      overflow-y: auto;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--nude-pink-overlay);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    header {
+      width: 100%;
+      background-color: var(--college-primary-color);
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+      z-index: 5;
+      position: relative;
+    }
+
+    .header-content { text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+    .college-name { font-size: 1.4em; font-weight: bold; line-height: 1.2; padding: 0 10px; }
+    .header-content p { font-size: 0.9em; margin: 5px 0 0 0; }
+
+    .navbar {
+      display: none;
+      width: 100%;
+      background-color: var(--button-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .nav-links {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; justify-content: center;
+    }
+    .nav-links li a {
+      display: block;
+      padding: 8px 18px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .nav-links li a:hover { background-color: #c0506e; }
+
+    .slideshow-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -3;
+      background-size: cover;
+      background-position: center;
+      filter: blur(1px);
+      opacity: 0.9;
+      transition: background-image 1s ease-in-out;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      max-width: 450px;
+      z-index: 10;
+      flex-grow: 1;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .tab-controls { display: flex; width: 100%; margin-bottom: 0; }
+
+    .tab-button {
+      flex: 1;
+      padding: 15px 10px;
+      border: none;
+      background-color: rgba(255,255,255,0.7);
+      color: var(--college-primary-color);
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+      border-bottom: 3px solid transparent;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    .tab-button.active {
+      background-color: rgba(255,255,255,1);
+      color: var(--college-primary-color);
+      border-bottom: 3px solid var(--button-color);
+    }
+
+    .auth-box {
+      width: 100%;
+      background-color: rgba(255,255,255,0.95);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .form-group { margin-bottom: 12px; }
+    label { display:block; margin-bottom:4px; font-weight:bold; }
+    input[type="text"], input[type="number"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--button-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .auth-button:hover { background-color: #c0506e; }
+
+    .language-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 15px;
+      font-size: 0.95em;
+    }
+    .lang-button {
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid var(--button-color);
+      background-color: white;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--button-color);
+      font-size: 0.9em;
+      min-width: 70px;
+    }
+    .lang-button.active {
+      background-color: var(--button-color);
+      color: white;
+    }
+
+    .hidden { display:none; }
+
+    #popupArea {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .popup {
+      position: absolute;
+      min-width: 190px;
+      max-width: 220px;
+      background: rgba(255,255,255,0.88);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .popup.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .popup.hide {
+      opacity: 0;
+      transform: translateY(-18px);
+    }
+    .popup img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid #f1cfcf;
+    }
+    .popup-text {
+      font-size: 0.8em;
+      color: #333;
+    }
+
+    #message-box {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 0.9em;
+      color: white;
+      display: none;
+      z-index: 999;
+    }
+    #message-box.show { display:block; }
+    #message-box.success { background-color: var(--success-color); }
+    #message-box.error { background-color: var(--error-color); }
+
+    .footer-full {
+      width: 100%;
+      margin-top: 30px;
+      padding: 10px 0;
+      background-color: var(--button-color);
+      color: white;
+      text-align: center;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+    }
+    .footer-text { display:block; margin-top:4px; font-weight:bold; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <div class="college-name">BLDEA's V.P. Dr. P.G. Halakatti College of Engineering & Technology</div>
+      <p>Pomegranate Disease Detection System</p>
+    </div>
+  </header>
+
+  <nav class="navbar" id="navbar" style="display:none;">
+    <ul class="nav-links">
+      <li><a href="{{ url_for('login_page') }}">Login</a></li>
+      <li><a href="{{ url_for('home_page') }}">Home</a></li>
+      <li><a href="{{ url_for('upload_page') }}">Disease Detector</a></li>
+      <li><a href="{{ url_for('disease_page') }}">Disease Info</a></li>
+      <li><a href="{{ url_for('history_page') }}">History</a></li>
+      <li><a href="{{ url_for('aboutus_page') }}">About Us</a></li>
+    </ul>
+  </nav>
+
+  <div id="slideshow" class="slideshow-bg"></div>
+
+  <div class="main-content">
+    <div class="tab-controls">
+      <button id="signin-tab" class="tab-button active" onclick="showTab('signin')">Sign In</button>
+      <button id="signup-tab" class="tab-button" onclick="showTab('signup')">Sign Up</button>
+    </div>
+
+    <div class="auth-box">
+      <div id="signin-content">
+        <form id="signinForm" onsubmit="handleSignIn(event)">
+          <div class="form-group">
+            <label for="signinUsername">User Name:</label>
+            <input type="text" id="signinUsername" required />
+          </div>
+          <div class="form-group">
+            <label for="signinPhoneNumber">Phone Number:</label>
+            <input type="number" id="signinPhoneNumber" required />
+          </div>
+          <div class="form-group">
+            <label for="signinPassword">Password:</label>
+            <input type="password" id="signinPassword" required />
+          </div>
+          <button type="submit" class="auth-button">Sign In</button>
+        </form>
+      </div>
+
+      <div id="signup-content" class="hidden">
+        <form id="signupForm" onsubmit="handleSignUp(event)">
+          <div class="form-group">
+            <label for="signupName">Name:</label>
+            <input type="text" id="signupName" required />
+          </div>
+          <div class="form-group">
+            <label for="signupPhoneNumber">Phone Number:</label>
+            <input type="number" id="signupPhoneNumber" required />
+          </div>
+          <div id="signup-password-flow">
+            <div class="form-group">
+              <label for="signupPassword">Set Password:</label>
+              <input type="password" id="signupPassword" required />
+            </div>
+            <div class="form-group">
+              <label for="signupConfirmPassword">Confirm Password:</label>
+              <input type="password" id="signupConfirmPassword" required />
+            </div>
+            <button type="submit" class="auth-button">Sign Up for Website</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="language-selector">
+        <label id="language-label">Language Preference:</label>
+        <button class="lang-button active" data-lang="en" onclick="setLanguage('en')">English</button>
+        <button class="lang-button" data-lang="kn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="popupArea"></div>
+  <div id="message-box" class="hidden"></div>
+
+  <footer class="footer-full">
+    <div class="footer-content">
+      <small>© <span id="year">2025</span> Pomegranate Fruit Disease Detection — Final Year Project</small>
+      <span class="footer-text">See early, Save more!</span>
+    </div>
+  </footer>
+
+  <!-- 🔥 Firebase + login/signup logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // ✅ Your new Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCv_QO6q82O10N8g4l9mZJXcKx4g4GLrzc",
+      authDomain: "pomo-db.firebaseapp.com",
+      projectId: "pomo-db",
+      storageBucket: "pomo-db.firebasestorage.app",
+      messagingSenderId: "81858695824",
+      appId: "1:81858695824:web:208d27956893b82046be15",
+      measurementId: "G-KEQ8YWQ78J"
+    };
+
+    console.log("🔥 Firebase Config Loaded Successfully:", firebaseConfig);
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const LANG_KEY = "language";
+
+    // ----- Helpers -----
+    function phoneToEmail(phone) {
+      return `${phone}@pomo.app`;
+    }
+
+    async function saveUserProfile(user, fullName, phone) {
+      const ref = doc(db, "users", user.uid);
+      await setDoc(
+        ref,
+        {
+          name: fullName,
+          phone: phone,
+          role: "Student",
+          createdAt: serverTimestamp()
+        },
+        { merge: true }
+      );
+    }
+
+    async function loadUserProfileToLocalStorage(user) {
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        const data = snap.data();
+        localStorage.setItem("username", data.name || "");
+        localStorage.setItem("contactNumber", data.phone || "");
+        localStorage.setItem("userRole", data.role || "Student");
+      } else {
+        localStorage.setItem("userRole", "Student");
+      }
+      localStorage.setItem("logged_in_user_id", user.uid);
+    }
+
+    function showMessage(message, type = "success", duration = 3000) {
+      const box = document.getElementById("message-box");
+      box.textContent = message;
+      box.className = "";
+      box.classList.add(type, "show");
+      setTimeout(() => box.classList.remove("show"), duration);
+    }
+
+    // ----- Tabs + language -----
+    const TRANSLATIONS = {
+      en: { signin: "Sign In", signup: "Sign Up", langLabel: "Language Preference:" },
+      kn: { signin: "ಸೈನ್ ಇನ್", signup: "ಸೈನ್ ಅಪ್", langLabel: "ಭಾಷಾ ಆದ್ಯತೆ:" }
+    };
+
+    function showTab(tabId) {
+      document.getElementById("signin-content").classList.toggle("hidden", tabId !== "signin");
+      document.getElementById("signup-content").classList.toggle("hidden", tabId !== "signup");
+      document.getElementById("signin-tab").classList.toggle("active", tabId === "signin");
+      document.getElementById("signup-tab").classList.toggle("active", tabId === "signup");
+    }
+
+    function setLanguage(lang) {
+      document
+        .querySelectorAll(".lang-button")
+        .forEach(btn => btn.classList.toggle("active", btn.dataset.lang === lang));
+
+      localStorage.setItem(LANG_KEY, lang);
+      const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      document.getElementById("signin-tab").textContent = t.signin;
+      document.getElementById("signup-tab").textContent = t.signup;
+      document.getElementById("language-label").textContent = t.langLabel;
+    }
+
+    // ----- Sign Up -----
+    async function handleSignUp(event) {
+      event.preventDefault();
+      const name = document.getElementById("signupName").value.trim();
+      const phone = document.getElementById("signupPhoneNumber").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("signupConfirmPassword").value;
+
+      if (!name || !phone || !password) {
+        showMessage("Please fill all fields.", "error");
+        return false;
+      }
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match.", "error");
+        return false;
+      }
+      if (password.length < 6) {
+        showMessage("Password must be at least 6 characters long.", "error");
+        return false;
+      }
+
+      try {
+        const email = phoneToEmail(phone);
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await saveUserProfile(cred.user, name, phone);
+
+        showMessage("Registration successful! Please Sign In.", "success", 3000);
+        showTab("signin");
+        document.getElementById("signupForm").reset();
+        return true;
+      } catch (err) {
+        console.error(err);
+        showMessage("Sign up failed: " + err.message, "error", 4000);
+        return false;
+      }
+    }
+
+    // ----- Sign In -----
+    async function handleSignIn(event) {
+      event.preventDefault();
+      const username = document.getElementById("signinUsername").value.trim();
+      const phone = document.getElementById("signinPhoneNumber").value.trim();
+      const password = document.getElementById("signinPassword").value;
+
+      if (!username || !phone || !password) {
+        showMessage("Please fill all fields.", "error");
+        return false;
+      }
+
+      try {
+        const email = phoneToEmail(phone);
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        await loadUserProfileToLocalStorage(cred.user);
+        localStorage.setItem("username", username);
+        showMessage(`Login Successful! Welcome, ${username}.`, "success", 2000);
+
+        setTimeout(() => { window.location.href = "/home"; }, 700);
+      } catch (err) {
+        console.error(err);
+        showMessage("Login failed. Please check your details.", "error", 3500);
+      }
+    }
+
+    // ----- Slideshow & popups -----
+    const slideshowImages = [
+      "/static/Background_image.jpg",
+      "/static/Pomo1.jpg",
+      "/static/Pomo2.jpg",
+      "/static/Pomo3.jpg",
+      "/static/Pomo4.jpg",
+      "/static/bacterial_blight_pomegranate.jpg",
+      "/static/alternaria_pomegranate.jpg",
+      "/static/healthy_pomegranate.jpg",
+      "/static/anthracnose_pomegranate.jpg"
+    ];
+
+    let slideIndex = 0;
+
+    function showVideoSlideshow() {
+      const slideEl = document.getElementById("slideshow");
+      if (!slideEl) return;
+
+      function updateSlide() {
+        slideEl.style.backgroundImage = `url('${slideshowImages[slideIndex]}')`;
+        slideIndex = (slideIndex + 1) % slideshowImages.length;
+      }
+
+      updateSlide();
+      setInterval(updateSlide, 4000);
+    }
+
+    function showRandomPopup(popupArea, images) {
+      if (!popupArea || images.length === 0) return;
+
+      const popup = document.createElement("div");
+      popup.className = "popup";
+
+      const img = document.createElement("img");
+      img.src = images[Math.floor(Math.random() * images.length)];
+
+      const textDiv = document.createElement("div");
+      textDiv.className = "popup-text";
+      textDiv.innerHTML = "<strong>Tip:</strong> Early detection helps save your crop!";
+
+      popup.appendChild(img);
+      popup.appendChild(textDiv);
+
+      const side = Math.random() > 0.5 ? "left" : "right";
+      const verticalPos = Math.random() * 70 + 10;
+      const horizontalOffset = Math.random() * 5 + 2;
+      popup.style[side] = `${horizontalOffset}%`;
+      popup.style.top = `${verticalPos}%`;
+
+      popupArea.appendChild(popup);
+
+      setTimeout(() => popup.classList.add("show"), 100);
+      setTimeout(() => popup.classList.add("hide"), 3100);
+      setTimeout(() => popup.remove(), 4000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedLang = localStorage.getItem(LANG_KEY) || "en";
+      setLanguage(savedLang);
+      showTab("signin");
+
+      const slideEl = document.getElementById("slideshow");
+      if (slideEl) {
+        slideEl.style.backgroundImage = `url('${slideshowImages[0]}')`;
+      }
+
+      showVideoSlideshow();
+
+      const popupArea = document.getElementById("popupArea");
+      const imageList = slideshowImages;
+      setInterval(() => showRandomPopup(popupArea, imageList), 1800);
+    });
+
+    window.addEventListener("load", () => {
+      const y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
+    });
+
+    // 🔓 Expose functions for inline HTML
+    window.handleSignUp = handleSignUp;
+    window.handleSignIn = handleSignIn;
+    window.showTab = showTab;
+    window.setLanguage = setLanguage;
+  </script>
+  <!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
