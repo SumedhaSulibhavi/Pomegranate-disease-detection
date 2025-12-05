@@ -10,3 +10,4 @@ timm
 pillow
 numpy
 gunicorn
+python-dotenv
